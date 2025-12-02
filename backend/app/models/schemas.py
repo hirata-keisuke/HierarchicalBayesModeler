@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Union
 from datetime import datetime
 
 class ModelCreate(BaseModel):
@@ -14,7 +14,7 @@ class ModelResponse(BaseModel):
     session_id: str
 
 class NodeCreate(BaseModel):
-    node_type: str  # observed, latent, hyperparameter, operation
+    node_type: str  # data, observed, latent, hyperparameter, operation, constant
     gui_name: str
     code_name: str
     shape: Optional[str] = None
@@ -22,6 +22,8 @@ class NodeCreate(BaseModel):
     parameters: Optional[Dict[str, Any]] = None
     operation: Optional[str] = None
     position: Dict[str, float]  # {x: float, y: float}
+    constant_value: Optional[Union[float, List[float]]] = None
+    csv_mapping: Optional[Dict[str, str]] = None
 
 class NodeUpdate(BaseModel):
     gui_name: Optional[str] = None
@@ -31,6 +33,8 @@ class NodeUpdate(BaseModel):
     parameters: Optional[Dict[str, Any]] = None
     operation: Optional[str] = None
     position: Optional[Dict[str, float]] = None
+    constant_value: Optional[Union[float, List[float]]] = None
+    csv_mapping: Optional[Dict[str, str]] = None
 
 class NodeResponse(BaseModel):
     node_id: str
@@ -42,6 +46,8 @@ class NodeResponse(BaseModel):
     parameters: Optional[Dict[str, Any]] = None
     operation: Optional[str] = None
     position: Dict[str, float]
+    constant_value: Optional[Union[float, List[float]]] = None
+    csv_mapping: Optional[Dict[str, str]] = None
 
 class EdgeCreate(BaseModel):
     source: str  # source node_id
@@ -56,10 +62,16 @@ class EdgeResponse(BaseModel):
     source_handle: Optional[str] = None
     target_handle: Optional[str] = None
 
+class HandleDefinition(BaseModel):
+    id: str
+    label: str
+    type: str = "target"  # target or source
+
 class ParameterDefinition(BaseModel):
     name: str
     display_name: str
     type: str
+    handle_id: str
     default: Optional[Any] = None
     description: Optional[str] = None
     required: bool = True
@@ -80,5 +92,6 @@ class OperationDefinition(BaseModel):
     pymc_function: str
     operands: int
     operand_names: List[str]
+    handles: List[HandleDefinition]
     broadcasting: bool = True
     description: Optional[str] = None

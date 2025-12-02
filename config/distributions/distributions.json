@@ -7,6 +7,7 @@
         "name": "mu",
         "display_name": "平均 μ",
         "type": "real",
+        "handle_id": "mu",
         "default": 0,
         "description": "分布の平均値",
         "required": true
@@ -15,6 +16,7 @@
         "name": "sigma",
         "display_name": "標準偏差 σ",
         "type": "positive_real",
+        "handle_id": "sigma",
         "default": 1,
         "description": "分布の標準偏差（正の値）",
         "required": true
@@ -33,6 +35,7 @@
         "name": "alpha",
         "display_name": "形状パラメータ α",
         "type": "positive_real",
+        "handle_id": "alpha",
         "default": 1,
         "description": "分布の形状を決定",
         "required": true
@@ -41,6 +44,7 @@
         "name": "beta",
         "display_name": "逆尺度パラメータ β",
         "type": "positive_real",
+        "handle_id": "beta",
         "default": 1,
         "description": "尺度の逆数",
         "required": true
@@ -59,6 +63,7 @@
         "name": "alpha",
         "display_name": "形状パラメータ α",
         "type": "positive_real",
+        "handle_id": "alpha",
         "default": 1,
         "description": "成功回数に関連",
         "required": true
@@ -67,6 +72,7 @@
         "name": "beta",
         "display_name": "形状パラメータ β",
         "type": "positive_real",
+        "handle_id": "beta",
         "default": 1,
         "description": "失敗回数に関連",
         "required": true
@@ -85,6 +91,7 @@
         "name": "p",
         "display_name": "成功確率 p",
         "type": "probability",
+        "handle_id": "p",
         "default": 0.5,
         "description": "1が出る確率（0 ≤ p ≤ 1）",
         "required": true
@@ -103,6 +110,7 @@
         "name": "mu",
         "display_name": "平均発生率 λ",
         "type": "positive_real",
+        "handle_id": "mu",
         "default": 1,
         "description": "単位時間あたりの平均発生回数",
         "required": true
@@ -121,6 +129,7 @@
         "name": "lower",
         "display_name": "下限",
         "type": "real",
+        "handle_id": "lower",
         "default": 0,
         "description": "分布の下限値",
         "required": true
@@ -129,6 +138,7 @@
         "name": "upper",
         "display_name": "上限",
         "type": "real",
+        "handle_id": "upper",
         "default": 1,
         "description": "分布の上限値",
         "required": true
@@ -147,6 +157,7 @@
         "name": "lam",
         "display_name": "率パラメータ λ",
         "type": "positive_real",
+        "handle_id": "lam",
         "default": 1,
         "description": "発生率の逆数がスケール",
         "required": true
@@ -165,6 +176,7 @@
         "name": "sigma",
         "display_name": "標準偏差 σ",
         "type": "positive_real",
+        "handle_id": "sigma",
         "default": 1,
         "description": "分布のスケール",
         "required": true
@@ -183,6 +195,7 @@
         "name": "nu",
         "display_name": "自由度 ν",
         "type": "positive_real",
+        "handle_id": "nu",
         "default": 1,
         "description": "分布の自由度",
         "required": true
@@ -191,6 +204,7 @@
         "name": "mu",
         "display_name": "位置パラメータ μ",
         "type": "real",
+        "handle_id": "mu",
         "default": 0,
         "description": "分布の中心",
         "required": true
@@ -199,6 +213,7 @@
         "name": "sigma",
         "display_name": "スケールパラメータ σ",
         "type": "positive_real",
+        "handle_id": "sigma",
         "default": 1,
         "description": "分布のスケール",
         "required": true
@@ -217,6 +232,7 @@
         "name": "n",
         "display_name": "試行回数 n",
         "type": "positive_integer",
+        "handle_id": "n",
         "default": 10,
         "description": "ベルヌーイ試行の回数",
         "required": true
@@ -225,6 +241,7 @@
         "name": "p",
         "display_name": "成功確率 p",
         "type": "probability",
+        "handle_id": "p",
         "default": 0.5,
         "description": "各試行の成功確率",
         "required": true

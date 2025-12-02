@@ -1,7 +1,6 @@
 import { create } from 'zustand'
 import { Node, Edge, NodeChange, EdgeChange, applyNodeChanges, applyEdgeChanges } from 'reactflow'
-
-export type NodeType = 'observed' | 'latent' | 'hyperparameter' | 'operation'
+import { NodeType } from '../types'
 
 export interface ModelNode extends Node {
   data: {
@@ -12,6 +11,8 @@ export interface ModelNode extends Node {
     distribution?: string
     parameters?: Record<string, any>
     operation?: string
+    constantValue?: number | number[]
+    csvMapping?: Record<string, string>
   }
 }
 

@@ -6,6 +6,10 @@
     "pymc_function": "pm.math.add",
     "operands": 2,
     "operand_names": ["A", "B"],
+    "handles": [
+      {"id": "operand_1", "label": "A", "type": "target"},
+      {"id": "operand_2", "label": "B", "type": "target"}
+    ],
     "broadcasting": true,
     "description": "要素ごとの加算。異なる形状の配列にも対応（ブロードキャスト）"
   },
@@ -16,6 +20,10 @@
     "pymc_function": "pm.math.subtract",
     "operands": 2,
     "operand_names": ["A", "B"],
+    "handles": [
+      {"id": "minuend", "label": "被減数", "type": "target"},
+      {"id": "subtrahend", "label": "減数", "type": "target"}
+    ],
     "broadcasting": true,
     "description": "要素ごとの減算"
   },
@@ -26,6 +34,10 @@
     "pymc_function": "pm.math.multiply",
     "operands": 2,
     "operand_names": ["A", "B"],
+    "handles": [
+      {"id": "operand_1", "label": "A", "type": "target"},
+      {"id": "operand_2", "label": "B", "type": "target"}
+    ],
     "broadcasting": true,
     "description": "要素ごとの乗算（アダマール積）"
   },
@@ -36,6 +48,10 @@
     "pymc_function": "pm.math.dot",
     "operands": 2,
     "operand_names": ["A", "B"],
+    "handles": [
+      {"id": "left", "label": "左行列", "type": "target"},
+      {"id": "right", "label": "右行列", "type": "target"}
+    ],
     "broadcasting": false,
     "description": "行列の内積。形状は (M, K) @ (K, N) → (M, N)"
   },
@@ -46,6 +62,9 @@
     "pymc_function": "pm.math.exp",
     "operands": 1,
     "operand_names": ["A"],
+    "handles": [
+      {"id": "input", "label": "入力", "type": "target"}
+    ],
     "broadcasting": true,
     "description": "自然指数関数 e^x"
   },
@@ -56,6 +75,9 @@
     "pymc_function": "pm.math.log",
     "operands": 1,
     "operand_names": ["A"],
+    "handles": [
+      {"id": "input", "label": "入力", "type": "target"}
+    ],
     "broadcasting": true,
     "description": "自然対数 ln(x)"
   },
@@ -66,6 +88,9 @@
     "pymc_function": "pm.math.sqrt",
     "operands": 1,
     "operand_names": ["A"],
+    "handles": [
+      {"id": "input", "label": "入力", "type": "target"}
+    ],
     "broadcasting": true,
     "description": "平方根 √x"
   },
@@ -76,6 +101,9 @@
     "pymc_function": "pm.math.abs_",
     "operands": 1,
     "operand_names": ["A"],
+    "handles": [
+      {"id": "input", "label": "入力", "type": "target"}
+    ],
     "broadcasting": true,
     "description": "絶対値 |x|"
   },
@@ -86,6 +114,9 @@
     "pymc_function": "pm.math.sigmoid",
     "operands": 1,
     "operand_names": ["A"],
+    "handles": [
+      {"id": "input", "label": "入力", "type": "target"}
+    ],
     "broadcasting": true,
     "description": "シグモイド関数 1 / (1 + e^(-x))"
   },
@@ -96,6 +127,9 @@
     "pymc_function": "pm.math.softmax",
     "operands": 1,
     "operand_names": ["A"],
+    "handles": [
+      {"id": "input", "label": "入力", "type": "target"}
+    ],
     "broadcasting": true,
     "description": "ソフトマックス関数（確率分布への変換）"
   }

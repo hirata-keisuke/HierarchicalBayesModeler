@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   Box,
   Drawer,
@@ -17,23 +17,30 @@ import {
   Calculate,
   Functions,
   Delete,
+  DataObject,
+  Tag,
 } from '@mui/icons-material'
-import { useModelStore, NodeType } from '../stores/modelStore'
+import { useModelStore } from '../stores/modelStore'
+import { NodeType } from '../types'
 
 const DRAWER_WIDTH = 280
 
 const nodeTypeIcons = {
+  data: <DataObject />,
   observed: <Visibility />,
   latent: <CloudUpload />,
   hyperparameter: <Functions />,
   operation: <Calculate />,
+  constant: <Tag />,
 }
 
-const nodeTypeLabels = {
+const nodeTypeLabels: Record<NodeType, string> = {
+  data: 'データ（説明変数）',
   observed: '観測変数',
   latent: '潜在変数',
   hyperparameter: 'ハイパーパラメータ',
   operation: '演算ノード',
+  constant: '定数',
 }
 
 const Sidebar = () => {
@@ -49,10 +56,12 @@ const Sidebar = () => {
         guiName: `${nodeTypeLabels[nodeType]}${nodeCounter}`,
         codeName: `var_${nodeCounter}`,
         nodeType,
-        shape: nodeType === 'operation' ? undefined : '(n_observations,)',
-        distribution: nodeType === 'operation' ? undefined : 'Normal',
+        shape: nodeType === 'operation' || nodeType === 'constant' ? undefined : '(n_observations,)',
+        distribution: nodeType === 'observed' || nodeType === 'latent' || nodeType === 'hyperparameter' ? 'Normal' : undefined,
         operation: nodeType === 'operation' ? 'add' : undefined,
         parameters: {},
+        constantValue: nodeType === 'constant' ? 0 : undefined,
+        csvMapping: nodeType === 'data' || nodeType === 'observed' ? {} : undefined,
       },
     }
 
