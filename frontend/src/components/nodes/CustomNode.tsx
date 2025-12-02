@@ -1,8 +1,9 @@
-import { memo } from 'react'
+import { memo, useState, useEffect } from 'react'
 import { Handle, Position, NodeProps } from 'reactflow'
 import { Box, Typography, Paper } from '@mui/material'
 import { ModelNode } from '../../stores/modelStore'
-import { NodeType } from '../../types'
+import { NodeType, DistributionDefinition, OperationDefinition } from '../../types'
+import api from '../../services/api'
 
 const nodeColors: Record<NodeType, string> = {
   data: '#00BCD4',
@@ -27,11 +28,50 @@ const CustomNode = ({ data, selected }: NodeProps<ModelNode['data']>) => {
   const color = nodeColors[nodeType]
   const label = nodeLabels[nodeType]
 
-  // ノードタイプに応じて入力ハンドルを生成
-  const hasInputHandles = nodeType === 'observed' || nodeType === 'latent' || nodeType === 'hyperparameter' || nodeType === 'operation'
+  const [distributions, setDistributions] = useState<DistributionDefinition[]>([])
+  const [operations, setOperations] = useState<OperationDefinition[]>([])
+
+  // 分布・演算定義を取得
+  useEffect(() => {
+    const fetchDefinitions = async () => {
+      try {
+        const [distResp, opResp] = await Promise.all([
+          api.get<DistributionDefinition[]>('/distributions'),
+          api.get<OperationDefinition[]>('/operations'),
+        ])
+        setDistributions(distResp.data)
+        setOperations(opResp.data)
+      } catch (error) {
+        console.error('Failed to fetch definitions:', error)
+      }
+    }
+    fetchDefinitions()
+  }, [])
 
   // ノードタイプに応じて出力ハンドルを生成
   const hasOutputHandle = nodeType !== 'observed'
+
+  // 動的入力ハンドルの生成
+  let inputHandles: Array<{ id: string; label: string }> = []
+
+  if (nodeType === 'observed' || nodeType === 'latent' || nodeType === 'hyperparameter') {
+    // 分布のパラメータに基づくハンドル
+    const distDef = distributions.find((d: DistributionDefinition) => d.name === data.distribution)
+    if (distDef) {
+      inputHandles = distDef.parameters.map((param: any) => ({
+        id: param.handle_id,
+        label: param.display_name,
+      }))
+    }
+  } else if (nodeType === 'operation') {
+    // 演算のオペランドに基づくハンドル
+    const opDef = operations.find((o: OperationDefinition) => o.name === data.operation)
+    if (opDef && opDef.handles) {
+      inputHandles = opDef.handles
+        .filter((h: any) => h.type === 'target')
+        .map((h: any) => ({ id: h.id, label: h.label }))
+    }
+  }
 
   return (
     <Paper
@@ -49,20 +89,46 @@ const CustomNode = ({ data, selected }: NodeProps<ModelNode['data']>) => {
         },
       }}
     >
-      {/* 入力ハンドル（左側） */}
-      {hasInputHandles && (
-        <Handle
-          type="target"
-          position={Position.Left}
-          id="default"
-          style={{
-            background: color,
-            width: 12,
-            height: 12,
-            left: -6,
-          }}
-        />
-      )}
+      {/* 入力ハンドル（左側）- 動的生成 */}
+      {inputHandles.map((handle, index) => {
+        const totalHandles = inputHandles.length
+        const spacing = 100 / (totalHandles + 1)
+        const topPosition = spacing * (index + 1)
+
+        return (
+          <Handle
+            key={handle.id}
+            type="target"
+            position={Position.Left}
+            id={handle.id}
+            style={{
+              background: color,
+              width: 12,
+              height: 12,
+              left: -6,
+              top: `${topPosition}%`,
+            }}
+          >
+            <Box
+              sx={{
+                position: 'absolute',
+                left: -8,
+                top: '50%',
+                transform: 'translateY(-50%) translateX(-100%)',
+                fontSize: '0.65rem',
+                color: 'text.secondary',
+                whiteSpace: 'nowrap',
+                backgroundColor: 'rgba(255,255,255,0.9)',
+                padding: '2px 4px',
+                borderRadius: '4px',
+                pointerEvents: 'none',
+              }}
+            >
+              {handle.label}
+            </Box>
+          </Handle>
+        )
+      })}
 
       <Box>
         <Typography
