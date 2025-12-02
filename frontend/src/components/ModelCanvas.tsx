@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import ReactFlow, {
   Background,
   Controls,
@@ -6,11 +6,35 @@ import ReactFlow, {
   ConnectionMode,
   Connection,
   addEdge,
+  MarkerType,
+  Edge,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import { Box } from '@mui/material'
 import { useModelStore } from '../stores/modelStore'
 import CustomNode from './nodes/CustomNode'
+import { NodeType } from '../types'
+
+const nodeColors: Record<NodeType, string> = {
+  data: '#00BCD4',
+  observed: '#4CAF50',
+  latent: '#2196F3',
+  hyperparameter: '#FF9800',
+  operation: '#9C27B0',
+  constant: '#9E9E9E',
+}
+
+const defaultEdgeOptions = {
+  type: 'smoothstep',
+  markerEnd: {
+    type: MarkerType.ArrowClosed,
+    width: 20,
+    height: 20,
+  },
+  style: {
+    strokeWidth: 2,
+  },
+}
 
 const ModelCanvas = () => {
   const {
@@ -26,7 +50,12 @@ const ModelCanvas = () => {
 
   const onConnect = useCallback(
     (params: Connection) => {
-      setEdges(addEdge(params, edges))
+      const newEdge: Edge = {
+        ...params,
+        id: `edge-${params.source}-${params.target}`,
+        ...defaultEdgeOptions,
+      }
+      setEdges(addEdge(newEdge, edges))
     },
     [edges, setEdges]
   )
@@ -49,19 +78,14 @@ const ModelCanvas = () => {
         onNodeClick={onNodeClick}
         nodeTypes={nodeTypes}
         connectionMode={ConnectionMode.Loose}
+        defaultEdgeOptions={defaultEdgeOptions}
         fitView
       >
         <Background />
         <Controls />
         <MiniMap
           nodeColor={(node) => {
-            const colors = {
-              observed: '#4CAF50',
-              latent: '#2196F3',
-              hyperparameter: '#FF9800',
-              operation: '#9C27B0',
-            }
-            return colors[node.data.nodeType as keyof typeof colors] || '#999'
+            return nodeColors[node.data.nodeType as NodeType] || '#999'
           }}
         />
       </ReactFlow>
