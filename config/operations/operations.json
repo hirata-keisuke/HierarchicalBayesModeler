@@ -1,0 +1,102 @@
+[
+  {
+    "name": "add",
+    "display_name": "和",
+    "notation": "{A} + {B}",
+    "pymc_function": "pm.math.add",
+    "operands": 2,
+    "operand_names": ["A", "B"],
+    "broadcasting": true,
+    "description": "要素ごとの加算。異なる形状の配列にも対応（ブロードキャスト）"
+  },
+  {
+    "name": "subtract",
+    "display_name": "差",
+    "notation": "{A} - {B}",
+    "pymc_function": "pm.math.subtract",
+    "operands": 2,
+    "operand_names": ["A", "B"],
+    "broadcasting": true,
+    "description": "要素ごとの減算"
+  },
+  {
+    "name": "multiply",
+    "display_name": "積",
+    "notation": "{A} * {B}",
+    "pymc_function": "pm.math.multiply",
+    "operands": 2,
+    "operand_names": ["A", "B"],
+    "broadcasting": true,
+    "description": "要素ごとの乗算（アダマール積）"
+  },
+  {
+    "name": "matmul",
+    "display_name": "行列積",
+    "notation": "{A} @ {B}",
+    "pymc_function": "pm.math.dot",
+    "operands": 2,
+    "operand_names": ["A", "B"],
+    "broadcasting": false,
+    "description": "行列の内積。形状は (M, K) @ (K, N) → (M, N)"
+  },
+  {
+    "name": "exp",
+    "display_name": "指数",
+    "notation": "exp({A})",
+    "pymc_function": "pm.math.exp",
+    "operands": 1,
+    "operand_names": ["A"],
+    "broadcasting": true,
+    "description": "自然指数関数 e^x"
+  },
+  {
+    "name": "log",
+    "display_name": "対数",
+    "notation": "log({A})",
+    "pymc_function": "pm.math.log",
+    "operands": 1,
+    "operand_names": ["A"],
+    "broadcasting": true,
+    "description": "自然対数 ln(x)"
+  },
+  {
+    "name": "sqrt",
+    "display_name": "平方根",
+    "notation": "sqrt({A})",
+    "pymc_function": "pm.math.sqrt",
+    "operands": 1,
+    "operand_names": ["A"],
+    "broadcasting": true,
+    "description": "平方根 √x"
+  },
+  {
+    "name": "abs",
+    "display_name": "絶対値",
+    "notation": "abs({A})",
+    "pymc_function": "pm.math.abs_",
+    "operands": 1,
+    "operand_names": ["A"],
+    "broadcasting": true,
+    "description": "絶対値 |x|"
+  },
+  {
+    "name": "sigmoid",
+    "display_name": "シグモイド",
+    "notation": "sigmoid({A})",
+    "pymc_function": "pm.math.sigmoid",
+    "operands": 1,
+    "operand_names": ["A"],
+    "broadcasting": true,
+    "description": "シグモイド関数 1 / (1 + e^(-x))"
+  },
+  {
+    "name": "softmax",
+    "display_name": "ソフトマックス",
+    "notation": "softmax({A})",
+    "pymc_function": "pm.math.softmax",
+    "operands": 1,
+    "operand_names": ["A"],
+    "broadcasting": true,
+    "description": "ソフトマックス関数（確率分布への変換）"
+  }
+]

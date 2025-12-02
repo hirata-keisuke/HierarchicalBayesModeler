@@ -1,0 +1,77 @@
+name: bayesian-model-gui
+
+services:
+  # Redis (メッセージブローカー & キャッシュ)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # FastAPI APIサーバー
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - STORAGE_PATH=/app/storage
+      - CORS_ORIGINS=http://localhost:3000,http://localhost
+    volumes:
+      - ./backend:/app
+      - ./storage:/app/storage
+      - ./config:/app/config
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Celery Worker
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - STORAGE_PATH=/app/storage
+    volumes:
+      - ./backend:/app
+      - ./storage:/app/storage
+      - ./config:/app/config
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: celery -A app.celery_app worker --loglevel=info
+
+  # フロントエンド (開発モード)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: build
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    command: npm run dev
+    depends_on:
+      - api
+
+volumes:
+  redis_data:

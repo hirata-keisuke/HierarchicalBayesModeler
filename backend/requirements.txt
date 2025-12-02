@@ -1,0 +1,23 @@
+# FastAPI
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# Celery
+celery==5.3.6
+redis==5.0.1
+
+# PyMC and dependencies
+pymc==5.10.4
+arviz==0.17.1
+numpy==1.26.3
+scipy==1.12.0
+pandas==2.2.0
+
+# Data validation
+pydantic==2.5.3
+pydantic-settings==2.1.0
+
+# Others
+python-dotenv==1.0.0
+aiofiles==23.2.1
