@@ -1,9 +1,9 @@
-import { memo, useState, useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import { Handle, Position, NodeProps } from 'reactflow'
 import { Box, Typography, Paper } from '@mui/material'
 import { ModelNode } from '../../stores/modelStore'
 import { NodeType, DistributionDefinition, OperationDefinition } from '../../types'
-import api from '../../services/api'
+import { useDefinitionsStore } from '../../stores/definitionsStore'
 
 const nodeColors: Record<NodeType, string> = {
   data: '#00BCD4',
@@ -28,23 +28,10 @@ const CustomNode = ({ data, selected }: NodeProps<ModelNode['data']>) => {
   const color = nodeColors[nodeType]
   const label = nodeLabels[nodeType]
 
-  const [distributions, setDistributions] = useState<DistributionDefinition[]>([])
-  const [operations, setOperations] = useState<OperationDefinition[]>([])
+  const { distributions, operations, fetchDefinitions } = useDefinitionsStore()
 
   // 分布・演算定義を取得
   useEffect(() => {
-    const fetchDefinitions = async () => {
-      try {
-        const [distResp, opResp] = await Promise.all([
-          api.get<DistributionDefinition[]>('/distributions'),
-          api.get<OperationDefinition[]>('/operations'),
-        ])
-        setDistributions(distResp.data)
-        setOperations(opResp.data)
-      } catch (error) {
-        console.error('Failed to fetch definitions:', error)
-      }
-    }
     fetchDefinitions()
   }, [])
 
@@ -62,6 +49,9 @@ const CustomNode = ({ data, selected }: NodeProps<ModelNode['data']>) => {
         id: param.handle_id,
         label: param.display_name,
       }))
+      console.log(`[${data.guiName}] Distribution: ${data.distribution}, Handles:`, inputHandles)
+    } else {
+      console.log(`[${data.guiName}] Distribution definition not found for: ${data.distribution}`)
     }
   } else if (nodeType === 'operation') {
     // 演算のオペランドに基づくハンドル
@@ -70,6 +60,9 @@ const CustomNode = ({ data, selected }: NodeProps<ModelNode['data']>) => {
       inputHandles = opDef.handles
         .filter((h: any) => h.type === 'target')
         .map((h: any) => ({ id: h.id, label: h.label }))
+      console.log(`[${data.guiName}] Operation: ${data.operation}, Handles:`, inputHandles)
+    } else {
+      console.log(`[${data.guiName}] Operation definition not found for: ${data.operation}`)
     }
   }
 

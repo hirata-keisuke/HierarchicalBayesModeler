@@ -17,12 +17,14 @@ import {
 import { Close, Save, Delete } from '@mui/icons-material'
 import { useModelStore } from '../stores/modelStore'
 import { DistributionDefinition, OperationDefinition } from '../types'
-import api from '../services/api'
+import { useDefinitionsStore } from '../stores/definitionsStore'
 
 const EDITOR_WIDTH = 400
 
 const NodeEditor = () => {
   const { selectedNode, setSelectedNode, updateNode, deleteNode } = useModelStore()
+  const { distributions, operations, fetchDefinitions } = useDefinitionsStore()
+
   const [guiName, setGuiName] = useState('')
   const [codeName, setCodeName] = useState('')
   const [shape, setShape] = useState('')
@@ -31,23 +33,8 @@ const NodeEditor = () => {
   const [constantValue, setConstantValue] = useState<string>('')
   const [parameters, setParameters] = useState<Record<string, any>>({})
 
-  const [distributions, setDistributions] = useState<DistributionDefinition[]>([])
-  const [operations, setOperations] = useState<OperationDefinition[]>([])
-
   // 分布・演算定義を取得
   useEffect(() => {
-    const fetchDefinitions = async () => {
-      try {
-        const [distResp, opResp] = await Promise.all([
-          api.get<DistributionDefinition[]>('/distributions'),
-          api.get<OperationDefinition[]>('/operations'),
-        ])
-        setDistributions(distResp.data)
-        setOperations(opResp.data)
-      } catch (error) {
-        console.error('Failed to fetch definitions:', error)
-      }
-    }
     fetchDefinitions()
   }, [])
 
